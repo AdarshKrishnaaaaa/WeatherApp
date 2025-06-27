@@ -7,6 +7,7 @@
 body {
     height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -26,6 +27,13 @@ body {
 .container:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.weather-heading {
+    text-align: center;
+    margin: 1rem;
+    margin-bottom: 2rem;
+    font-family: 'Great Vibes', cursive;
 }
 
 .search-box {

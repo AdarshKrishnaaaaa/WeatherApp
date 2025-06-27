@@ -3,8 +3,9 @@ const search = document.querySelector('.search-box button');
 const weatherBox = document.querySelector('.weather-box');
 const weatherDetails = document.querySelector('.weather-details');
 const error404 = document.querySelector('.not-found');
+const heading = document.querySelector('.weather-heading')
 
-search.addEventListener('click', () =>{
+search.addEventListener('click' || 'keydown', () =>{
     const APIKey = '6c6ef9bef31ecfe8644ee5b68c1fe30f';
     const city = document.querySelector('.search-box input').value;
 
@@ -69,6 +70,7 @@ search.addEventListener('click', () =>{
         weatherBox.classList.add('show');
         weatherDetails.classList.add('show');
         container.style.height = '590px';
+        heading.style.display = 'none';
     })
     .catch(error => {
         console.error('Error fetching weather data:', error);
