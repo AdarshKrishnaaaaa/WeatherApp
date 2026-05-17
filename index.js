@@ -5,9 +5,49 @@ const weatherDetails = document.querySelector(".weather-details");
 const error404 = document.querySelector(".not-found");
 const heading = document.querySelector(".weather-heading");
 const title = document.querySelector("title");
+const input = document.querySelector(".search-box input");
+const suggestionBox = document.querySelector(".suggestions");
 
 weatherBox.style.display = "none";
 weatherDetails.style.display = "none";
+
+input.addEventListener("input", async () => {
+  const query = input.value;
+
+  if (query.length < 2) {
+    suggestionBox.innerHTML = "";
+    return;
+  }
+
+  const res = await fetch(
+    `https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5`,
+  );
+
+  const data = await res.json();
+
+  suggestionBox.innerHTML = "";
+
+  if (!data.results) return;
+
+  data.results.forEach((place) => {
+    const li = document.createElement("li");
+    li.textContent = `${place.name}, ${place.admin1}, ${place.country}`;
+
+    li.addEventListener("click", () => {
+      input.value = place.name;
+      suggestionBox.innerHTML = "";
+      search.click();
+    });
+
+    suggestionBox.appendChild(li);
+  });
+});
+
+input.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    search.click();
+  }
+});
 
 search.addEventListener("click", () => {
   const APIKey = "485099f9d90e41bda87174132261605";
@@ -46,7 +86,7 @@ search.addEventListener("click", () => {
       description.innerHTML = `${json.current.condition.text}`;
       humidity.innerHTML = `${json.current.humidity}%`;
       wind.innerHTML = `${parseFloat(json.current.wind_kph).toFixed(1)} km/h`;
-      title.innerHTML = `${json.location.name} weather`
+      title.innerHTML = `${json.location.name} weather`;
 
       weatherBox.style.display = "";
       weatherDetails.style.display = "";
