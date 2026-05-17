@@ -169,8 +169,8 @@ body {
   width: 70%;
   max-height: 250px;
   overflow-y: auto;
-  top: 80%;
-  right: 20%;
+  top: 88%;
+  right: 24%;
   border-radius: 0 0 1rem 1rem;
 }
 
@@ -202,7 +202,7 @@ body {
 
     .suggestions{
         width: 65%;
-        right: 26%;
+        right: 24%;
     }
 }
 
