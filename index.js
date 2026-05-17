@@ -1,79 +1,61 @@
-const container = document.querySelector('.container');
-const search = document.querySelector('.search-box button');
-const weatherBox = document.querySelector('.weather-box');
-const weatherDetails = document.querySelector('.weather-details');
-const error404 = document.querySelector('.not-found');
-const heading = document.querySelector('.weather-heading')
+const container = document.querySelector(".container");
+const search = document.querySelector(".search-box button");
+const weatherBox = document.querySelector(".weather-box");
+const weatherDetails = document.querySelector(".weather-details");
+const error404 = document.querySelector(".not-found");
+const heading = document.querySelector(".weather-heading");
+const title = document.querySelector("title");
 
-search.addEventListener('click', () =>{
-    const APIKey = '6c6ef9bef31ecfe8644ee5b68c1fe30f';
-    const city = document.querySelector('.search-box input').value;
+weatherBox.style.display = "none";
+weatherDetails.style.display = "none";
 
-    if (city === '')
+search.addEventListener("click", () => {
+  const APIKey = "485099f9d90e41bda87174132261605";
+  const city = document.querySelector(".search-box input").value;
+
+  if (city === "") return;
+
+  fetch(`https://api.weatherapi.com/v1/current.json?key=${APIKey}&q=${city}`)
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(json);
+
+      if (json?.error?.code) {
+        container.style.height = "400px";
+        heading.style.display = "none";
+        weatherBox.style.display = "none";
+        weatherDetails.style.display = "none";
+        error404.style.display = "block";
+        error404.classList.add("fadeIn");
         return;
+      }
+      error404.style.display = "none";
+      error404.classList.remove("fadeIn");
 
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIKey}&units=metric`)
-    .then(response => response.json())
-    .then(json => {
-        console.log(json);
+      const image = document.querySelector(".weather-box img");
+      const temperature = document.querySelector(".weather-box .temperature");
+      const description = document.querySelector(".weather-box .description");
+      const humidity = document.querySelector(
+        ".weather-details .humidity span",
+      );
+      const wind = document.querySelector(".weather-details .wind span");
 
-        if (json.cod === 404) {
-            container.style.height = '400px'
-            weatherBox.style.display = 'none'
-            weatherDetails.style.display = 'none'
-            error404.style.display = 'block'
-            error404.classList.add('fadeIn')
-            return;
-        }
-        error404.style.display = 'none'
-        error404.classList.remove('fadeIn')
+      image.src = json.current.condition.icon;
 
-        const image = document.querySelector('.weather-box img');
-        const temperature = document.querySelector('.weather-box .temperature');
-        const description = document.querySelector('.weather-box .description');
-        const humidity = document.querySelector('.weather-details .humidity span');
-        const wind = document.querySelector('.weather-details .wind span');
+      temperature.innerHTML = `${parseInt(json.current.temp_c)}<span>°C</span>`;
+      description.innerHTML = `${json.current.condition.text}`;
+      humidity.innerHTML = `${json.current.humidity}%`;
+      wind.innerHTML = `${parseFloat(json.current.wind_kph).toFixed(1)} km/h`;
+      title.innerHTML = `${json.location.name} weather`
 
-        switch(json.weather[0].main) {
-            case 'Clear':
-            image.src = 'images/clear.png'
-            break;
-
-            case 'Rain':
-                image.src = 'images/rain.png'
-                break;
-
-            case 'Snow':
-                image.src = 'images/snow.png'
-                break;
-
-            case 'Clouds':
-                image.src = 'images/cloud.png'
-                break;
-
-            case 'Haze':
-                image.src = 'images/haze.png'
-                break;
-
-            default:
-                image.src = '';
-
-        }
-
-        temperature.innerHTML = `${parseInt(json.main.temp)}<span>°C</span>`;  
-        description.innerHTML = `${json.weather[0].description}`;
-        humidity.innerHTML = `${json.main.humidity}%`;
-        wind.innerHTML = `${parseInt(json.wind.speed)}Km/h`;
-
-        weatherBox.style.display = '';
-        weatherDetails.style.display = '';
-        weatherBox.classList.add('show');
-        weatherDetails.classList.add('show');
-        container.style.height = '590px';
-        heading.style.display = 'none';
+      weatherBox.style.display = "";
+      weatherDetails.style.display = "";
+      weatherBox.classList.add("show");
+      weatherDetails.classList.add("show");
+      container.style.height = "590px";
+      heading.style.display = "none";
     })
-    .catch(error => {
-        console.error('Error fetching weather data:', error);
-        alert('Unable to fetch weather data. Please try again later.');
+    .catch((error) => {
+      console.error("Error fetching weather data:", error);
     });
 });
