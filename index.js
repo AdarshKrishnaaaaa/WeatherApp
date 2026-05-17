@@ -58,7 +58,6 @@ search.addEventListener("click", () => {
   fetch(`https://api.weatherapi.com/v1/current.json?key=${APIKey}&q=${city}`)
     .then((response) => response.json())
     .then((json) => {
-      console.log(json);
 
       if (json?.error?.code) {
         container.style.height = "400px";
@@ -87,6 +86,7 @@ search.addEventListener("click", () => {
       humidity.innerHTML = `${json.current.humidity}%`;
       wind.innerHTML = `${parseFloat(json.current.wind_kph).toFixed(1)} km/h`;
       title.innerHTML = `${json.location.name} weather`;
+      suggestionBox.innerHTML = "";
 
       weatherBox.style.display = "";
       weatherDetails.style.display = "";
